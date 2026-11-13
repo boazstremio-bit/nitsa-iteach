@@ -136,14 +136,64 @@
     text-align: center;
   }
 
+
+  /* ---------- visitor journeys ---------- */
+  .journeys {
+    position: relative; z-index: 1;
+    width: 100%; max-width: 900px;
+    margin: 8px auto 0;
+    padding: 0 clamp(20px, 5vw, 64px) 48px;
+    --j-on-bg: #E6F2FA;
+    --soft: #F1F5F9;
+  }
+  .journeys h2 {
+    font-size: clamp(1.5rem, 2.4vw, 1.9rem);
+    font-weight: 700; color: var(--blue);
+    margin: 0 0 8px; line-height: 1.2;
+  }
+  .journeys .lead { color: var(--ink); font-size: 1.05rem; line-height: 1.6; margin: 0 0 22px; max-width: 62ch; }
+  .journeys h3.sub { font-size: 1.2rem; font-weight: 700; color: var(--ink); margin: 40px 0 12px; }
+  .ctl { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 14px;
+    background: var(--paper); border: 1px solid var(--line); border-radius: 18px; padding: 16px 18px; margin-bottom: 16px; }
+  .ctl label { display: block; font-size: .85rem; color: var(--grey); margin-bottom: 4px; }
+  .ctl select { width: 100%; font: inherit; font-size: 1rem; padding: 8px 10px; border: 1px solid var(--line);
+    border-radius: 10px; background: var(--mist); color: var(--ink); }
+  .ctl select:focus-visible { outline: 2px solid var(--magenta); outline-offset: 2px; }
+  .mt { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-bottom: 24px; }
+  .m { background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: 10px 14px; min-width: 0; }
+  .m .l { font-size: .82rem; color: var(--grey); }
+  .m .v { font-size: 1.15rem; font-weight: 500; color: var(--ink); }
+  .st { display: flex; gap: 14px; margin-bottom: 10px; }
+  .mk { flex: none; width: 34px; display: flex; flex-direction: column; align-items: center; }
+  .mk svg { width: 32px; height: 30px; }
+  .mk i { flex: 1; width: 2px; background: repeating-linear-gradient(var(--line) 0 6px, transparent 6px 10px); margin-top: 4px; }
+  .jcard { flex: 1; min-width: 0; background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: 10px 16px; }
+  .jcard.skip { background: transparent; border-style: dashed; }
+  .jcard h4 { font-size: 1rem; font-weight: 500; margin: 0; }
+  .say { font-size: 1rem; margin: 4px 0 0; line-height: 1.7; color: var(--ink); }
+  .tag { display: inline-block; font-size: .75rem; font-weight: 500; padding: 1px 9px; border-radius: 20px; margin-inline-start: 6px; vertical-align: 2px; }
+  .full { background: var(--j-on-bg); color: var(--blue-deep); }
+  .short { background: #FBE7ED; color: var(--magenta); }
+  .off { background: var(--soft); color: var(--grey); }
+  .vis { background: transparent; border: 1px solid var(--line); color: var(--grey); font-weight: 400; }
+  .br { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px; }
+  .br div { background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: 10px 14px; font-size: .92rem; color: var(--grey); line-height: 1.55; }
+  .br b { display: block; color: var(--ink); font-weight: 500; margin-bottom: 2px; }
+  @media (max-width: 600px) { .mt { grid-template-columns: 1fr 1fr; } .mt .m:last-child { grid-column: 1 / -1; } }
+
   @media (max-width: 860px) {
     main { grid-template-columns: 1fr; align-items: start; }
     .intro p { max-width: none; }
+    /* phone: Nitsa first, filling the screen under a slim header (avatar on top, chat with visuals below) */
+    header { padding: 10px 16px; }
+    header img { height: 30px; }
+    main { padding: 0 10px 28px; gap: 22px; }
+    .stage { order: -1; padding: 4px; border-radius: 18px; }
+    #nitsa-agent { height: calc(100vh - 62px); height: calc(100svh - 62px); min-height: 480px; border-radius: 14px; }
+    .intro { padding: 0 8px; }
     .intro h1 { font-size: 1.8rem; margin-bottom: 10px; }
     .intro p { font-size: 1rem; margin-bottom: 8px; }
     .intro .who { display: none; }
-    #nitsa-agent { height: 70vh; min-height: 420px; }
-    header img { height: 38px; }
   }
 </style>
 </head>
@@ -173,16 +223,103 @@
 
   <section class="stage" aria-label="שיחה עם נצה הדיגיטלית">
     <div id="nitsa-agent" dir="ltr">
-      <div class="loading">נצה מתחברת…</div>
+      <div class="loading" dir="rtl">נצה מתחברת…</div>
     </div>
   </section>
 </main>
+
+<section class="journeys" aria-labelledby="jt">
+  <h2 id="jt">איך נצה מתאימה את השיחה לכל מבקר</h2>
+  <p class="lead">בחרו תחום עניין, גיל, זמן והרכב, וראו איך המסלול משתנה: אילו שלבים נכללים, מה נצה אומרת, ואיפה היא מציגה הדגמה.</p>
+<div class="ctl">
+<div><label for="i">תחום עניין</label><select id="i">
+<option value="cars">מכוניות</option><option value="bikes" selected>אופניים</option><option value="money">כסף וטיולים</option><option value="diy">עבודה בידיים ונגרות</option><option value="art">ציור ואמנות</option><option value="music">מוזיקה</option><option value="games">משחקי מחשב</option><option value="puzzle">חידות</option><option value="science">מדע וחלל</option><option value="none">אין תחום מוגדר</option></select></div>
+<div><label for="a">גיל ורקע</label><select id="a">
+<option value="kid">ילד (6–10)</option><option value="teen" selected>נוער (11–17)</option><option value="adult">מבוגר</option><option value="teacher">מורה למתמטיקה</option></select></div>
+<div><label for="t">זמן ועניין</label><select id="t">
+<option value="1">ממהר (כדקה)</option><option value="5">מתעניין (כ-5 דקות)</option><option value="10" selected>סקרן מאוד (כ-10 דקות)</option></select></div>
+<div><label for="g">הרכב</label><select id="g">
+<option value="solo">לבד</option><option value="family">משפחה</option><option value="class">כיתה או קבוצה</option></select></div>
+</div>
+
+
+  <div class="mt">
+    <div class="m"><div class="l">שלבים במסלול</div><div class="v" id="ms">–</div></div>
+    <div class="m"><div class="l">הדגמות חזותיות</div><div class="v" id="mv">–</div></div>
+    <div class="m"><div class="l">שימוש מרכזי</div><div class="v" id="ma">–</div></div>
+  </div>
+  <div id="list"></div>
+  <h3 class="sub">מה קורה כשהשיחה יוצאת מהמסלול</h3>
+<div class="br">
+<div><b>ממהר</b>מקצרים לשלבים העיקריים: הריבוע הקופץ, מְשֻׁלָּשׁ רוּלוֹ, והפואנטה.</div>
+<div><b>תשובה שגויה</b>לא אומרים "נכון". "רוב האנשים חושבים כך. בוא נבדוק."</div>
+<div><b>"את אמיתית?"</b>גילוי נאות: דמות דיגיטלית שנבנתה על בסיס ההרצאות של נצה.</div>
+<div><b>שאלה מחוץ לנושא</b>משפט אחד קצר, וחזרה לשלב הנוכחי. לא נכנסים לנושא אחר.</div>
+<div><b>רעיון של המבקר</b>מתייחסים אליו ברצינות לתור או שניים, ואז ממשיכים. רעיון ששייך לשלב מאוחר נשמר לשלב שלו.</div>
+<div><b>"לא יודע"</b>"בוא נחשוב ביחד", רמז, ורק אז התשובה.</div>
+<div><b>תחום עניין שלא ברשימה</b>מפת תחומי העניין (כ-400 תחומים), תחום קרוב, או גשר כללי: סיבוב, צורה, חיסכון בחומר, מדידה, חשיבה הפוכה, הפתעה.</div>
+<div><b>פרידה</b>תמיד אחרי הפואנטה ("רק לעיגול יש מרכז"), עם משפט שחוזר לתחום העניין.</div>
+</div>
+</section>
 
 <footer>
   נצה הדיגיטלית היא דמות מבוססת בינה מלאכותית, שנבנתה בהסכמתה של פרופ' נצה מובשוביץ-הדר. &copy; I-Teach
 </footer>
 
-<script type="module"
+<script>
+
+const HAVE=new Set(['VIS_02','VIS_03','VIS_04','VIS_05','VIS_06','VIS_07','VIS_11','VIS_12','VIS_14','VIS_17']);
+const I={
+cars:{h:'מכוניות! לכל מכונית יש גלגלים, ונראה מובן מאליו שהם עגולים. מה לדעתך: גלגל של מכונית חייב להיות עגול?',app:'הציר בגלגל של מכונית',av:[],as:'בגלגל של מכונית הציר חייב להישאר בדיוק באותו גובה, כדי שהמכונית לא תקפוץ. נבדוק בהמשך איזו צורה מאפשרת את זה.',bye:'בפעם הבאה שתראה מכונית נוסעת, תסתכל על הציר: הוא לא זז למעלה ולמטה, בזכות העיגול.'},
+bikes:{h:'אופניים! מישהו באמת בנה אופניים עם גלגלים לא עגולים. מה דעתך, זה יכול לעבוד?',app:'אופני רוּלוֹ',av:['VIS_13','VIS_14'],as:'בסין בנו אופניים עם גלגלי רוּלוֹ; המושב נשען על הגלגלים מלמעלה, כי הציר קופץ.',bye:'בפעם הבאה שתרכב, תסתכל על הציר: הוא נשאר באותו גובה בזכות העיגול.'},
+money:{h:'כסף וטיולים! אולי החזקת פעם מטבע מפתיע בלי לדעת. איזו צורה יש למטבעות שאתה מכיר?',app:'מטבעות',av:['VIS_11'],as:'מטבעות 20 ו-50 פני בבריטניה הם מְשֻׁבָּע רוּלוֹ: הרוחב קבוע, אז מכונה מזהה אותם מכל כיוון, וגם חוסכים קצת מתכת (כ-1.7%).',bye:'בטיול הבא לבריטניה, חפש בכיס מטבע עם שבע צלעות מעוגלות.'},
+diy:{h:'עבודה בידיים! כל מקדח קודח חור עגול. איך היית קודח חור ריבועי?',app:'מקדח ריבועי',av:['VIS_09'],as:'הארי ואטס המציא ב-1914 מקדח שקודח חור כמעט ריבועי, בזכות משולש רוּלוֹ.',bye:'בפעם הבאה שתקדח חור, תחשוב: הוא באמת חייב להיות עגול?'},
+art:{h:'ציור! היום נצייר במחוגה צורה מפתיעה. מה לדעתך אפשר לצייר רק עם מחוגה?',app:'משולש רוּלוֹ במחוגה ובחלונות',av:['VIS_05'],as:'את משולש רוּלוֹ מציירים רק במחוגה; יש חלונות כנסייה גותיים בצורה הזאת, ולאונרדו דה וינצ\'י השתמש בה במפת עולם.',bye:'נסי לצייר בבית משולש רוּלוֹ במחוגה, ולגזור כמה מקרטון.'},
+music:{h:'מוזיקה! גם תקליט מסתובב סביב מרכז, ופה מתחיל הסיפור שלי. מה לדעתך: גלגל חייב להיות עגול?',app:'מפרט גיטרה',av:[],as:'הרבה מפרטים של גיטרה הם בצורת משולש רוּלוֹ: נוחים לאחיזה ולנגינה.',bye:'בפעם הבאה שתחזיק מפרט, תבדוק אם הוא משולש שָׁמֵן.'},
+games:{h:'משחקי מחשב! בעולם של קוביות, איך היית בונה גלגל? מה יקרה לגלגל ריבועי?',app:'גלגל ריבועי על כביש מיוחד',av:['VIS_04'],as:'יש כביש מקשתות שעליו גלגל ריבועי נוסע חָלָק. במוזיאון המתמטיקה בניו יורק רוכבים על תלת-אופן עם גלגלים ריבועיים על כביש כזה.',bye:'אולי תבנה במשחק כביש של קשתות לגלגל ריבועי?'},
+puzzle:{h:'חידות! הנה אחת מפורסמת: למה מכסי ביוב עגולים?',app:'מכסי ביוב',av:['VIS_06'],as:'מכסה עגול לא נופל לבור, כי הרוחב שלו קבוע. אבל גם מכסה בצורת משולש רוּלוֹ לא היה נופל.',bye:'בפעם הבאה שתעבור ליד מכסה ביוב, תדע שהוא יכול היה להיות משולש שָׁמֵן.'},
+science:{h:'מדע! הפיזיקאי פיינמן שאל פעם: איך יודעים שמשהו באמת עגול?',app:'פיינמן ומדידת עגילות',av:['VIS_02'],as:'מדידת קטר בכמה כיוונים לא מוכיחה שחלק עגול: גם צורה שווה-רוחב עוברת את הבדיקה.',bye:'ככה עובד מדע: לבדוק מה בדיוק הבדיקה מוכיחה.'},
+none:{h:'זה בסדר גמור. אז אתחיל משאלה שנשמעת טיפשית: גלגל חייב להיות עגול?',app:'גלילים ומטבעות',av:['VIS_07'],as:'קרש על גלילי רוּלוֹ נוסע חָלָק, ומטבעות בבריטניה בנויים על אותו רעיון.',bye:'ככה מתמטיקה עובדת: שואלים שאלה נועזת ומגלים משהו שאף אחד לא חיפש.'}};
+function S(i,a,t,g){
+const d=I[i],kid=a==='kid',T=+t,tch=a==='teacher';
+const kidSci=kid&&i==='science';
+const dd=kidSci?I.none:d;
+const fam=g==='family'?' (פונה לילד, ומזמינה את ההורה לנחש יחד)':g==='class'?' (שאלה לכל הכיתה, הצבעה בידיים)':'';
+return [
+['היכרות','f','"שלום! אני נצה, כלומר הגרסה הדיגיטלית שלה. מה הכי מעניין אותך?"'+fam,[]],
+['הכרה, גשר ושאלה','f','"'+dd.h+'"',[]],
+['מה זה רוחב',T==1?'o':'f','"מה בדיוק בעיגול עוזר לו להתגלגל חָלָק?"',['VIS_02']],
+['ניחוש וכישלון',T==1?'s':'f',kid?'"מה יקרה לריבוע? בוא נראה אותו קופץ!"':'"באלכסון הריבוע רחב יותר, אז הוא קופץ. ומה עם משולש?"',['VIS_03']],
+['משנים את הכביש',T==10||(i==='games'&&T==5)?'f':'o','"אם אי אפשר לשנות את הגלגל, מה עוד אפשר לשנות?"',['VIS_04']],
+['ההפתעה: משולש רוּלוֹ',T==1?'s':'f',kid?'"משולש שָׁמֵן שרחב באותה מידה מכל כיוון!"':'"מכל פינה מותחים קשת. לדעתך, הרוחב שלו קבוע או משתנה?"',T==1?['VIS_06']:['VIS_05','VIS_06','VIS_07']],
+['למה זה עובד',T==1||kid?'o':'f','"כל קשת צוירה מהפינה שמולה, אז המרחק ביניהן הוא תמיד אורך המחוגה."',[]],
+['שימוש מותאם: '+dd.app,T==1?'o':'f','"'+dd.as+' וזה מחזיר אותנו לתחום שלך."',dd.av],
+['מטבעות',T==1||i==='money'?'o':'f','"איפה בחיים צריך משהו שנמדד אותו דבר מכל כיוון? רמז: משהו שמכניסים למכונה."',['VIS_11']],
+['אינסוף צורות, ברביאר',T==10&&!kid||(tch&&T==5)?'f':(T==10&&kid?'s':'o'),kid?'"יש גם עם 5 ו-7 צלעות!"':'"כמה צורות כאלה יש? אינסוף, ולכולן אותו היקף."',['VIS_12','VIS_08']],
+['המהפך: איפה שמים ציר?','f',T==1?'"למה בכל זאת הגלגלים עגולים? בגלל הציר!"':kid?'"תסתכל על האמצע: הוא עולה ויורד!"':'"איפה היית שם ציר? במשולש רוּלוֹ הוא קופץ בכ-15% מהרוחב."',['VIS_14']],
+['הפואנטה: רק לעיגול יש מרכז','f','"יש אינסוף צורות שוות-רוחב, אבל רק לאחת מהן יש מרכז. לכן גלגלים עגולים."',['VIS_15']],
+['חדשות מהמחקר',T==10&&!kid?'f':(tch&&T==5?'s':'o'),'"השערת קאקייה בתלת-ממד נפתרה ב-2025, והונג וואנג זכתה במדליית פילדס 2026."',['VIS_17']],
+['פרידה',T==1?'s':'f','"'+dd.bye+'"',[]]]}
+const R3='M16 2 A 26 26 0 0 1 29 24.5 A 26 26 0 0 1 3 24.5 A 26 26 0 0 1 16 2 Z';
+function R(){
+const v=id=>document.getElementById(id).value,i=v('i'),t=v('t'),a=v('a');
+const st=S(i,a,t,v('g'));let n=0;const vs=new Set(),ws=new Set();
+const lab={f:['נכלל','full'],s:['מקוצר','short'],o:['מדולג','off']};
+document.getElementById('list').innerHTML=st.map((s,k)=>{
+const on=s[1]!=='o';if(on){n++;s[3].forEach(x=>HAVE.has(x)?vs.add(x):ws.add(x))}
+const L=lab[s[1]];
+const hv=s[3].filter(x=>HAVE.has(x)).length;const tags=on&&hv?'<span class="tag vis">'+(hv>1?hv+' הדגמות':'הדגמה')+'</span>':'';
+return '<div class="st"><div class="mk"><svg viewBox="0 0 32 30" aria-hidden="true"><path d="'+R3+'" fill="'+(on?'var(--j-on-bg)':'none')+'" stroke="'+(on?'var(--blue)':'var(--line)')+'" stroke-width="1.5"/><text x="16" y="19" text-anchor="middle" font-size="11" font-weight="600" fill="'+(on?'var(--ink)':'var(--grey)')+'">'+(k+1)+'</text></svg>'+(k<st.length-1?'<i></i>':'')+'</div><div class="jcard'+(on?'':' skip')+'"><h4>'+s[0]+'<span class="tag '+L[1]+'">'+L[0]+'</span>'+tags+'</h4>'+(on?'<p class="say">'+s[2]+'</p>':'')+'</div></div>'}).join('');
+document.getElementById('ms').textContent=n+' מתוך '+st.length;
+document.getElementById('mv').textContent=vs.size;
+const kidSci=a==='kid'&&i==='science';
+document.getElementById('ma').textContent=t==='1'?'—':(kidSci?I.none:I[i]).app;
+}
+['i','a','t','g'].forEach(x=>document.getElementById(x).addEventListener('change',R));R();
+
+</script>
+
+<script id="nitsa-embed" type="module"
   src="https://agent.d-id.com/v2/index.js"
   data-mode="full"
   data-client-key="ck_b12EcCU4T4jy1-xo6OQUJ"
@@ -192,5 +329,23 @@
   data-light-mode="true"
   data-target-id="nitsa-agent">
 </script>
+<script>
+  // Phone: avatar on top, chat (where Nitsa's visuals appear) below. Wider screens: side by side.
+  (function () {
+    var mq = window.matchMedia('(max-width: 860px)');
+    var tag = document.getElementById('nitsa-embed');
+    function want() { return mq.matches ? 'vertical' : 'horizontal'; }
+    if (tag) tag.setAttribute('data-orientation', want());
+    function apply() {
+      var api = window.DID_AGENTS_API;
+      if (!api || typeof api.configure !== 'function') return false;
+      api.configure({ orientation: want() });
+      return true;
+    }
+    var tries = 0, iv = setInterval(function () { if (apply() || ++tries > 100) clearInterval(iv); }, 200);
+    if (mq.addEventListener) mq.addEventListener('change', apply);
+  })();
+</script>
+
 </body>
 </html>
