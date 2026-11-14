@@ -49,7 +49,7 @@
   header, main, footer { position: relative; z-index: 1; }
 
   header {
-    padding: 22px clamp(20px, 5vw, 64px);
+    padding: 14px clamp(20px, 5vw, 64px);
     display: flex;
     align-items: center;
   }
@@ -57,36 +57,44 @@
 
   main {
     flex: 1;
+    align-content: start;
     width: 100%;
     max-width: 1240px;
     margin: 0 auto;
-    padding: 12px clamp(20px, 5vw, 64px) 40px;
+    padding: 0 clamp(20px, 5vw, 64px) 40px;
     display: grid;
-    grid-template-columns: minmax(260px, 380px) 1fr;
-    gap: clamp(28px, 4vw, 56px);
-    align-items: center;
+    grid-template-columns: 1fr;
+    gap: 22px;
   }
 
+  .intro {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+    gap: 8px clamp(24px, 4vw, 56px);
+    align-items: end;
+  }
+  .intro h1 { align-self: center; }
+
   .intro h1 {
-    font-size: clamp(2rem, 3.6vw, 3.1rem);
+    font-size: clamp(1.8rem, 2.8vw, 2.5rem);
     line-height: 1.12;
     font-weight: 700;
     color: var(--blue);
-    margin: 0 0 18px;
+    margin: 0;
     letter-spacing: -0.01em;
   }
   .intro p {
     font-size: 1.125rem;
     line-height: 1.6;
     color: var(--ink);
-    margin: 0 0 14px;
-    max-width: 34ch;
+    margin: 0 0 6px;
+    max-width: 52ch;
   }
   .intro .who {
-    display: flex;
+    display: none;
     align-items: center;
     gap: 12px;
-    margin-top: 26px;
+    margin-top: 6px;
     font-weight: 500;
     color: var(--ink);
   }
@@ -113,10 +121,13 @@
     padding: 10px;
     box-shadow: 0 30px 60px -30px rgba(39, 145, 208, .35);
   }
+  .agent-wrap { position: relative; }
   #nitsa-agent {
     width: 100%;
-    height: min(72vh, 640px);
-    min-height: 460px;
+    aspect-ratio: 16 / 9;
+    height: auto;
+    max-height: calc(100vh - 250px);
+    min-height: 420px;
     border-radius: 20px;
     overflow: hidden;
     background: var(--mist);
@@ -128,6 +139,39 @@
     color: var(--grey);
     font-size: 1rem;
   }
+
+  /* ---------- "open the visuals" hint, pointing at the embed's panel toggle ---------- */
+  .tg-ring, .tg-tip { position: absolute; z-index: 2147483000; pointer-events: none;
+    opacity: 0; transition: opacity .35s ease; }
+  .tg-on .tg-ring, .tg-on .tg-tip { opacity: 1; }
+  .tg-ring {
+    top: 4px; right: 6px; width: 60px; height: 60px; border-radius: 50%;
+    border: 3px solid var(--blue);
+    box-shadow: 0 0 0 4px rgba(39, 145, 208, .18);
+  }
+  .tg-tip {
+    top: 76px; right: 10px; max-width: 250px;
+    background: var(--blue); color: #fff;
+    font-size: .98rem; font-weight: 500; line-height: 1.4;
+    padding: 10px 14px; border-radius: 14px;
+    box-shadow: 0 10px 24px -8px rgba(30, 43, 56, .45);
+    direction: rtl; text-align: right;
+  }
+  .tg-tip::before {
+    content: ""; position: absolute; top: -9px; right: 26px;
+    border: 10px solid transparent; border-top: 0; border-bottom-color: var(--blue);
+  }
+  .tg-tip .tg-x {
+    pointer-events: auto; display: none;
+    margin-inline-start: 8px; background: none; border: 0; color: inherit;
+    font: inherit; font-size: 1.1rem; line-height: 1; cursor: pointer; padding: 0 2px;
+  }
+  .tg-urgent .tg-ring { border-color: #E0263B; box-shadow: 0 0 0 4px rgba(224, 38, 59, .25); animation: tgPulse 1.1s ease-in-out infinite; }
+  .tg-urgent .tg-tip { background: #E0263B; font-weight: 700; font-size: 1.05rem; }
+  .tg-urgent .tg-tip::before { border-bottom-color: #E0263B; }
+  .tg-urgent .tg-tip .tg-x { display: inline; }
+  @keyframes tgPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.18); } }
+  @media (prefers-reduced-motion: reduce) { .tg-urgent .tg-ring { animation: none; } }
 
   footer {
     padding: 16px clamp(20px, 5vw, 64px) 22px;
@@ -187,8 +231,10 @@
   @media (max-width: 600px) { .mt { grid-template-columns: 1fr 1fr; } .mt .m:last-child { grid-column: 1 / -1; } }
 
   @media (max-width: 860px) {
-    main { grid-template-columns: 1fr; align-items: start; }
+    .intro { display: block; }
+    .intro h1 { margin-bottom: 10px; }
     .intro p { max-width: none; }
+    #nitsa-agent { aspect-ratio: auto; max-height: none; }
     /* phone: Nitsa first, filling the screen under a slim header (avatar on top, chat with visuals below) */
     header { padding: 10px 16px; }
     header img { height: 30px; }
@@ -211,8 +257,7 @@
 <main>
   <section class="intro">
     <h1>האם גלגל חייב להיות עגול?</h1>
-    <p>נצה הדיגיטלית תזמין אתכם לנחש, לטעות ולגלות צורות שמתגלגלות בלי להיות עיגולים.</p>
-    <p>לחצו על החלון, אשרו את המיקרופון ודברו איתה בעברית.</p>
+    <p>נצה הדיגיטלית תזמין אתכם לנחש, לטעות ולגלות צורות שמתגלגלות בלי להיות עיגולים. לחצו על החלון, אשרו את המיקרופון ודברו איתה בעברית. כשהיא מתחילה לדבר, לחצו על הכפתור הקטן בפינה הימנית העליונה של החלון, ושם יופיעו ההמחשות שלה.</p>
     <div class="who">
       <svg class="reuleaux" viewBox="0 0 100 100" aria-hidden="true">
         <path d="M50 6 A88 88 0 0 1 94 82 A88 88 0 0 1 6 82 A88 88 0 0 1 50 6Z"
@@ -227,8 +272,12 @@
   </section>
 
   <section class="stage" aria-label="שיחה עם נצה הדיגיטלית">
-    <div id="nitsa-agent" dir="ltr">
-      <div class="loading" dir="rtl">נצה מתחברת…</div>
+    <div class="agent-wrap" id="agent-wrap">
+      <div id="nitsa-agent" dir="ltr">
+        <div class="loading" dir="rtl">נצה מתחברת…</div>
+      </div>
+      <div class="tg-ring" aria-hidden="true"></div>
+      <div class="tg-tip" role="status" aria-live="polite"><span class="tg-text">ההמחשות של נצה נפתחות בכפתור הזה</span><button class="tg-x" type="button" aria-label="סגירת התזכורת">×</button></div>
     </div>
   </section>
 </main>
@@ -427,5 +476,51 @@ R();
   })();
 </script>
 
+<script>
+  // Hint: point at the embed's panel toggle (top-right), where Nitsa's visuals appear.
+  // Gentle hint when Nitsa connects; red reminder if 5 s after she starts talking the visitor hasn't opened it.
+  (function () {
+    var wrap = document.getElementById('agent-wrap');
+    var box = document.getElementById('nitsa-agent');
+    var text = wrap.querySelector('.tg-text');
+    var opened = false, shown = false, talkTimer = null, talked = false;
+    var MSG_SOFT = 'ההמחשות של נצה נפתחות בכפתור הזה';
+    var MSG_URGENT = 'לחצו כאן כדי לראות את ההמחשות!';
+
+    function hide() { wrap.classList.remove('tg-on', 'tg-urgent'); }
+    function soft() { if (opened || shown) return; shown = true; text.textContent = MSG_SOFT; wrap.classList.add('tg-on'); }
+    function urgent() { if (opened) return; shown = true; text.textContent = MSG_URGENT; wrap.classList.add('tg-on', 'tg-urgent'); }
+    function startTalkClock() {
+      if (talked || opened) return; talked = true;
+      soft();
+      talkTimer = setTimeout(urgent, 5000);
+    }
+    function markOpened() { opened = true; clearTimeout(talkTimer); hide(); }
+
+    // A click near the top-right corner of the agent window = the visitor pressed the toggle.
+    wrap.addEventListener('pointerdown', function (e) {
+      if (e.target.closest && e.target.closest('.tg-x')) return;
+      var r = box.getBoundingClientRect();
+      if (e.clientX > r.right - 90 && e.clientY < r.top + 90) markOpened();
+    }, true);
+    wrap.querySelector('.tg-x').addEventListener('click', function () { markOpened(); });
+
+    // Prefer the embed's own events; fall back to timing from the visitor's first click.
+    var usedEvents = false;
+    var tries = 0, iv = setInterval(function () {
+      var api = window.DID_AGENTS_API;
+      if (api && api.events && typeof api.events.on === 'function') {
+        clearInterval(iv); usedEvents = true;
+        api.events.on('connection', function (d) { if (d && d.state === 'connected') soft(); });
+        api.events.on('agentActivity', function (d) { if (d && d.state === 'TALKING') startTalkClock(); });
+      } else if (++tries > 150) clearInterval(iv);
+    }, 200);
+    var firstClick = true;
+    box.addEventListener('pointerdown', function () {
+      if (!firstClick) return; firstClick = false;
+      setTimeout(function () { if (!usedEvents) { soft(); talkTimer = setTimeout(urgent, 9000); } }, 3000);
+    }, true);
+  })();
+</script>
 </body>
 </html>
